@@ -19,3 +19,9 @@ From which I will make an AI model to predict the best and worse case future mod
 The challenge asks to identify new factors that contribute to the spread of COVID
 
 
+https://www.worldometers.info/world-population/population-by-country/
+
+https://www.worldometers.info/coronavirus/
+
+NoSQL
+
