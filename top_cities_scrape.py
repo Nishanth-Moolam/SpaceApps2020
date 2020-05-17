@@ -19,9 +19,21 @@ for row in rows:
     col = row.find_all('td')
     cols.append(col)
 
-print (soup.prettify(cols[2][3]))
+city_names = []
+city_pops = []
+
+
+for i in range(len(cols)):
+    if i > 1:
+        city_name = cols[i][0].text.replace("\n",'')
+        city_names.append(city_name)
+        city_pop = cols[i][3].text.replace("\n",'')
+        city_pops.append(city_pop)
+
+print (city_pops)
+
 
 print ('|')
-print ("|")
+print ('|')
 print ('|')
 
