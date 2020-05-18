@@ -13,6 +13,7 @@ My plan is to find data for the 100 largest cites in the world including the fol
 - Age Distribution
 - Government Subsidy given
 - Unemployment rate
+- Tests administered
 
 From which I will make an AI model to predict the best and worse case future model for a city given certain factors.
 
@@ -20,8 +21,10 @@ The challenge asks to identify new factors that contribute to the spread of COVI
 
 
 https://www.worldometers.info/world-population/population-by-country/
-
 https://www.worldometers.info/coronavirus/
 
-NoSQL
+sqlite3
+pandas
+BeautifulSoup
+urllib.request
 
