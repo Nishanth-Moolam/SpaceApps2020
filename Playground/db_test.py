@@ -2,10 +2,15 @@ import pandas as pd
 import sqlite3
 
 #https://www.youtube.com/watch?v=AtBZC9F-MjI&list=PLQVvvaa0QuDe8XSftW-RAxdo6OmaeL85M&index=68
+#https://www.youtube.com/watch?v=vmEHCJofslg
+#https://www.youtube.com/watch?v=u5AYFuucvoU
+
+
 
 con = sqlite3.connect('test.db')
 c = con.cursor()
 
+# sql commands
 def create_table():
     c.execute('CREATE TABLE IF NOT EXISTS test(name TEXT, population REAL)')
 
@@ -29,10 +34,17 @@ def close_con():
 
 #create_table()
 #data_entry()
-read_from_db()
-print ('')
-read_high_pop()
-close_con()
+# read_from_db()
+# print ('')
+# read_high_pop()
+# close_con()
 
 
+# pandas
+con = sqlite3.connect('test.db')
+sql = '''
+SELECT * FROM test
+'''
 
+df = pd.read_sql_query(sql,con)
+print (df)
