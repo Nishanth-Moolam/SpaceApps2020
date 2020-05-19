@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup as soup 
 from urllib.request import urlopen as uReq
 
+#https://www.youtube.com/watch?v=mKxFfjNyj3c
+
 my_url = "https://en.wikipedia.org/wiki/List_of_largest_cities"
 
 uClient = uReq(my_url)
