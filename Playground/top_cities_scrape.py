@@ -29,7 +29,8 @@ for i in range(len(cols)):
         city_pop = cols[i][3].text.replace("\n",'')
         city_pops.append(city_pop)
 
-print (city_pops)
+print (city_names[0])
+print (city_pops[0])
 
 
 print ('|')

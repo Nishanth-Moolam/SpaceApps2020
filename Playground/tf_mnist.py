@@ -1,4 +1,5 @@
 import tensorflow as tf
+import matplotlib.pyplot as plt
 
 from tensorflow.keras.layers import Flatten, Dense, Dropout, Softmax
 from tensorflow.keras.models import Sequential
@@ -10,7 +11,14 @@ mnist = tf.keras.datasets.mnist
 # Load data and convert to float
 (x_train, y_train), (x_test, y_test) = mnist.load_data()
 x_train, x_test = x_train / 255.0, x_test / 255.0
-
+'''
+# viewing the first image
+plt.figure()
+plt.imshow(x_train[2])
+plt.colorbar()
+plt.grid(False)
+plt.show()
+'''
 # Build model by stacking layers
 model = Sequential([
 

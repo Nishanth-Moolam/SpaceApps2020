@@ -15,7 +15,7 @@ class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
 '''
 # viewing the first image
 plt.figure()
-plt.imshow(train_images[0])
+plt.imshow(train_images[2])
 plt.colorbar()
 plt.grid(False)
 plt.show()
