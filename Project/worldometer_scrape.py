@@ -2,7 +2,6 @@ from bs4 import BeautifulSoup as soup
 from urllib.request import urlopen, Request
 import numpy as np
 
-import matplotlib.pyplot as plt
 
 # base link of worldometer (coronavirus)
 worldometer_link_coronavirus = 'https://www.worldometers.info/coronavirus/'
@@ -18,15 +17,15 @@ def worldometer_coronavirus_scrape():
     returns:
     - country links - link extensions to the base link that makes url of the country in question
     - country names - name of country
-    - total cases - list of strings
-    - total_deaths - list of strings
-    - total_recovered - list of strings
-    - active_cases - list of strings
-    - serious_cases - list of strings
-    - cases_per_mil - list of strings
-    - deaths_per_mil - list of strings
-    - total_tests - list of strings 
-    - population - list of strings
+    - total cases - list
+    - total_deaths - list
+    - total_recovered - list
+    - active_cases - list
+    - serious_cases - list
+    - cases_per_mil - list
+    - deaths_per_mil - list
+    - total_tests - list 
+    - population - list
     - index_names - names for identification and matching from links
     '''
     # reads link
@@ -52,7 +51,7 @@ def worldometer_coronavirus_scrape():
         link_end = link_raw.find('>')
 
         country_links.append(link_raw[link_start+6:link_end-1])
-        index_names.append(link_raw[link_start+6:link_end-1].split('-population/')[0])
+        index_names.append(link_raw[link_start+6:link_end-1].replace('country','').replace('/',''))
 
 
     country_names = []
@@ -101,12 +100,14 @@ def worldometer_coronavirus_scrape():
         pop = cols[i][13].text
         population.append(pop)
 
-    worldometer_data =  (country_links, country_names, total_cases, total_deaths, total_recovered, 
-                        active_cases, serious_cases, cases_per_mil, deaths_per_mil, 
-                        total_tests, population, index_names)
+    worldometer_data =  (country_links, country_names, list_cleaner(total_cases), 
+                        list_cleaner(total_deaths), list_cleaner(total_recovered), 
+                        list_cleaner(active_cases), list_cleaner(serious_cases), 
+                        list_cleaner(cases_per_mil), list_cleaner(deaths_per_mil), 
+                        list_cleaner(total_tests), list_cleaner(population), 
+                         index_names)
 
     return worldometer_data
-
 
 def worldometer_population_scrape():
     '''
@@ -115,16 +116,16 @@ def worldometer_population_scrape():
     returns:
     - country_links - link extensions to the base link that makes url of the country in question
     - country_names - name of country
-    - population - list of strings
-    - yearly_change - list of strings
-    - net_change - list of strings
-    - density - list of strings
-    - land_area - list of strings
-    - migrants - list of strings
-    - fertility_rate - list of strings
-    - median_age - list of strings
-    - urban_pop_percent - list of strings
-    - world_share - list of strings
+    - population - list
+    - yearly_change - list
+    - net_change - list
+    - density - list
+    - land_area - list
+    - migrants - list
+    - fertility_rate - list
+    - median_age - list
+    - urban_pop_percent - list
+    - world_share - list
     - index_names - names for identification and matching from links
 
     '''
@@ -196,12 +197,12 @@ def worldometer_population_scrape():
         ws = cols[i][11].text
         world_share.append(ws)
 
-    worldometer_data =  (country_links, country_names, population, yearly_change, net_change, 
-                        density, land_area, migrants, fertility_rate, median_age, 
-                        urban_pop_percent, world_share, index_names)
+    worldometer_data =  (country_links, country_names, list_cleaner(population), list_cleaner(yearly_change), 
+                        list_cleaner(net_change), list_cleaner(density), list_cleaner(land_area), 
+                        list_cleaner(migrants), list_cleaner(fertility_rate), list_cleaner(median_age), 
+                        list_cleaner(urban_pop_percent), list_cleaner(world_share), index_names)
 
     return worldometer_data
-
 
 def worldometer_graph_data_collector(link, graph_num):
     '''
@@ -221,7 +222,7 @@ def worldometer_graph_data_collector(link, graph_num):
         date_end = date_data.find(']')
 
         # list of dates
-        dates_total_data = date_data[date_start+1:date_end].split(',')
+        dates_total_data = date_data[date_start+1:date_end].replace('"','').replace("'","").split(',')
 
         data_start_init = total_data_raw.find('data')
         data_end_init = total_data_raw.find('responsive')
@@ -230,13 +231,12 @@ def worldometer_graph_data_collector(link, graph_num):
         data_end = data.find(']')
 
         # list of case data
-        total_data = data[data_start+1:data_end].split(',')
+        total_data = list_cleaner(data[data_start+1:data_end].split(','))
     except IndexError:
         dates_total_data = None
         total_data = None
 
     return (dates_total_data , total_data)
-
 
 def worldometer_country_scrape(link):
     '''
@@ -267,21 +267,23 @@ def worldometer_country_scrape(link):
 
     return (country_name, total_cases, daily_new_cases, active_cases, total_deaths, daily_deaths)
 
-
 def list_cleaner(list_of_strings):
     '''
-    converts a list of strings to a list of floats
+    converts a list to a list of floats
     '''
     l = []
     for i in list_of_strings:
-        if i == '':
+        if i == ' ':
+            l.append(0.)
+        elif i == '':
+            l.append(0.)
+        elif i == 'null':
+            l.append(0.)
+        elif i =='N/A':
+            l.append(0.)
+        elif i =='N.A.':
             l.append(0.)
         else:
-            l.append(float(i.replace(',','')))
+            l.append(float(i.replace(',','').replace('%','')))
 
     return l
-
-
-serious = list_cleaner(worldometer_coronavirus_scrape()[6])
-
-print (serious)
