@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup as soup
 from urllib.request import urlopen, Request
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 # base link of worldometer (coronavirus)
 worldometer_link_coronavirus = 'https://www.worldometers.info/coronavirus/'
 
@@ -9,25 +11,24 @@ worldometer_link_coronavirus = 'https://www.worldometers.info/coronavirus/'
 worldometer_link_population = 'https://www.worldometers.info/'
 
 
-
-'''
-returns general country information for all countries on coronavirus
-
-returns:
-- country links - link extensions to the base link that makes url of the country in question
-- country names - name of country
-- total cases - list of strings
-- total_deaths - list of strings
-- total_recovered - list of strings
-- active_cases - list of strings
-- serious_cases - list of strings
-- cases_per_mil - list of strings
-- deaths_per_mil - list of strings
-- total_tests - list of strings 
-- population - list of strings
-- index_names - names for identification and matching from links
-'''
 def worldometer_coronavirus_scrape():
+    '''
+    returns general country information for all countries on coronavirus
+
+    returns:
+    - country links - link extensions to the base link that makes url of the country in question
+    - country names - name of country
+    - total cases - list of strings
+    - total_deaths - list of strings
+    - total_recovered - list of strings
+    - active_cases - list of strings
+    - serious_cases - list of strings
+    - cases_per_mil - list of strings
+    - deaths_per_mil - list of strings
+    - total_tests - list of strings 
+    - population - list of strings
+    - index_names - names for identification and matching from links
+    '''
     # reads link
     req = Request('https://www.worldometers.info/coronavirus/', headers={'User-Agent': 'Mozilla/5.0'})
     page_html = urlopen(req).read()
@@ -106,26 +107,27 @@ def worldometer_coronavirus_scrape():
 
     return worldometer_data
 
-'''
-returns general country information for all countries
 
-returns:
-- country_links - link extensions to the base link that makes url of the country in question
-- country_names - name of country
-- population - list of strings
-- yearly_change - list of strings
-- net_change - list of strings
-- density - list of strings
-- land_area - list of strings
-- migrants - list of strings
-- fertility_rate - list of strings
-- median_age - list of strings
-- urban_pop_percent - list of strings
-- world_share - list of strings
-- index_names - names for identification and matching from links
-
-'''
 def worldometer_population_scrape():
+    '''
+    returns general country information for all countries
+
+    returns:
+    - country_links - link extensions to the base link that makes url of the country in question
+    - country_names - name of country
+    - population - list of strings
+    - yearly_change - list of strings
+    - net_change - list of strings
+    - density - list of strings
+    - land_area - list of strings
+    - migrants - list of strings
+    - fertility_rate - list of strings
+    - median_age - list of strings
+    - urban_pop_percent - list of strings
+    - world_share - list of strings
+    - index_names - names for identification and matching from links
+
+    '''
 
     req = Request('https://www.worldometers.info/world-population/population-by-country/', headers={'User-Agent': 'Mozilla/5.0'})
     page_html = urlopen(req).read()
@@ -200,10 +202,11 @@ def worldometer_population_scrape():
 
     return worldometer_data
 
-'''
-helper function to obtain information from graphs in worldometer website
-'''
+
 def worldometer_graph_data_collector(link, graph_num):
+    '''
+    helper function to obtain information from graphs in worldometer website
+    '''
     req = Request(link, headers={'User-Agent': 'Mozilla/5.0'})
     page_html = urlopen(req).read()
     page_soup = soup(page_html, "html.parser")
@@ -234,18 +237,19 @@ def worldometer_graph_data_collector(link, graph_num):
 
     return (dates_total_data , total_data)
 
-'''
-given a link to a country info page (specific to coronavirus info pages) returns all relevant information
 
-returns:
-- country_name - name of country
-- total_cases - tuple of dates, and case data (daily)
-- daily_new_cases - tuple of dates, and new case data (daily)
-- active_cases - tuple of dates, and active data (daily)
-- total_deaths - tuple of dates, and new deaths data (daily)
-- daily_deaths - tuple of dates, and new daily death data (daily)
-'''
 def worldometer_country_scrape(link):
+    '''
+    given a link to a country info page (specific to coronavirus info pages) returns all relevant information
+
+    returns:
+    - country_name - name of country
+    - total_cases - tuple of dates, and case data (daily)
+    - daily_new_cases - tuple of dates, and new case data (daily)
+    - active_cases - tuple of dates, and active data (daily)
+    - total_deaths - tuple of dates, and new deaths data (daily)
+    - daily_deaths - tuple of dates, and new daily death data (daily)
+    '''
     req = Request(link, headers={'User-Agent': 'Mozilla/5.0'})
     page_html = urlopen(req).read()
     page_soup = soup(page_html, "html.parser")
@@ -264,5 +268,20 @@ def worldometer_country_scrape(link):
     return (country_name, total_cases, daily_new_cases, active_cases, total_deaths, daily_deaths)
 
 
+def list_cleaner(list_of_strings):
+    '''
+    converts a list of strings to a list of floats
+    '''
+    l = []
+    for i in list_of_strings:
+        if i == '':
+            l.append(0.)
+        else:
+            l.append(float(i.replace(',','')))
+
+    return l
 
 
+serious = list_cleaner(worldometer_coronavirus_scrape()[6])
+
+print (serious)
