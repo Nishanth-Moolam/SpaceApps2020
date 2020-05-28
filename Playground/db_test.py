@@ -6,9 +6,9 @@ import sqlite3
 #https://www.youtube.com/watch?v=u5AYFuucvoU
 
 
-
-con = sqlite3.connect('test.db')
-c = con.cursor()
+def connect():
+    con = sqlite3.connect('test.db')
+    c = con.cursor()
 
 # sql commands
 def create_table():

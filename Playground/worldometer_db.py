@@ -1,11 +1,11 @@
 import pandas as pd 
-import sqlite3
-from bs4 import BeautifulSoup as soup 
-from urllib.request import urlopen, Request
 import numpy as np
+from sqlalchemy import create_engine
 
 import matplotlib.pyplot as plt
 import worldometer_scrape as ws 
+
+engine = create_engine('sqlite://', echo=False)
 
 def gather_data():
     '''
@@ -75,7 +75,7 @@ def make_world_df(data):
         'world_share' : world_share_p
     }
 
-    df_world = pd.DataFrame(world_data, columns = ['name', 'population','yearly_p_change',
+    df_world = pd.DataFrame(world_data, columns = ['name', 'links', 'population','yearly_p_change',
                                                     'net_p_change', 'density','land_area',
                                                     'fertility_rate','median_age','urban_pop_percent',
                                                     'world_share','total_c_cases','total_c_deaths',
@@ -84,6 +84,7 @@ def make_world_df(data):
 
     # sorts and places corona data into pop data
     for i in range(len(index_names_c)):
+        df_world.loc[df_world['name'] == index_names_c[i], ['links']] = country_links_c[i]
         df_world.loc[df_world['name'] == index_names_c[i], ['total_c_cases']] = total_cases_c[i]
         df_world.loc[df_world['name'] == index_names_c[i], ['total_c_deaths']] = total_deaths_c[i]
         df_world.loc[df_world['name'] == index_names_c[i], ['total_c_recovered']] = total_recovered_c[i]
@@ -95,7 +96,10 @@ def make_world_df(data):
 
     return df_world
     
-print (make_world_df(gather_data()).head())
+
+
+
+
 
 #---------------------------------------------------------------------------------------------------
 
@@ -119,30 +123,3 @@ for link in country_links_c:
     data = ws.worldometer_country_scrape(ws.worldometer_link_coronavirus+link)
     countries_data.append(data)
 '''
-
-
-def create_world_table():
-    sql = '''
-    CREATE TABLE IF NOT EXISTS world(
-        name TEXT,
-        population REAL,
-        yearly_p_change REAL,
-        net_p_change REAL, 
-        density REAL,
-        land_area REAL, 
-        fertility_rate REAL,
-        median_age REAL, 
-        urban_pop_percent REAL, 
-        world_share REAL, 
-        total_c_cases REAL,
-        total_c_deaths REAL, 
-        total_c_recovered REAL,
-        active_c_cases REAL,
-        serious_c_cases REAL,
-        c_cases_per_mil REAL,
-        c_deaths_per_mil REAL,
-        total_c_tests REAL,
-    )
-    '''
-    c.execute(sql)
-
